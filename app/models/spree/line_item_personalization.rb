@@ -2,7 +2,7 @@ module Spree
   class LineItemPersonalization < ActiveRecord::Base
     belongs_to :line_item
 
-    COMPARISON_KEYS = [:value, :price, :currency]
+    COMPARISON_KEYS = [:name, :value, :price, :currency]
 
     def self.permitted_attributes 
       [:value]
