@@ -11,20 +11,22 @@ module Spree
     has_one :line_item_personalization, :dependent => :destroy
     accepts_nested_attributes_for :line_item_personalization, :allow_destroy => true
 
-    before_save :persist_line_item_personalization, :on => :create, :if => -> { self.line_item_personalization }
+    before_save :copy_personalization, :on => :create, :if => -> { self.line_item_personalization }
 
     private
 
-    def persist_line_item_personalization
+    def copy_personalization
+      pp = self.product.product_personalization
       lip = self.line_item_personalization
       lip.line_item = self
-      calculator = self.product.product_personalization.try(:calculator)
-      if calculator
-        lip.price = calculator.preferred_amount
-        lip.currency = calculator.preferred_currency
+      if pp
+        lip.name = pp.name
+        calc = pp.calculator
+        lip.price = calc.preferred_amount
+        lip.currency = calc.preferred_currency
       end
       lip.save!
     end
-      
+
   end
 end

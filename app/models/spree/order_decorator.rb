@@ -7,10 +7,12 @@ module Spree
       if lip.nil?
         options.empty?
       else
-        calculator = line_item.product.product_personalization.try(:calculator)
-        if calculator
-          options['price'] = calculator.preferred_amount
-          options['currency'] = calculator.preferred_currency
+        pp = line_item.product.product_personalization
+        if pp
+          options['name'] = pp.name
+          calc = pp.calculator
+          options['price'] = calc.preferred_amount
+          options['currency'] = calc.preferred_currency
         end
         lip.match? options.with_indifferent_access
       end
