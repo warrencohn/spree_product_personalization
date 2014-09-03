@@ -8,6 +8,8 @@ Gemfile.lock
 /public/system
 /coverage/
 /spec/tmp
+/spec/dummy
+results.xml
 **.orig
 rerun.txt
 pickle-email-*.html
