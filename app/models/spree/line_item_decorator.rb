@@ -11,7 +11,7 @@ module Spree
     has_one :line_item_personalization, :dependent => :destroy
     accepts_nested_attributes_for :line_item_personalization, :allow_destroy => true
 
-    before_save :copy_personalization, :on => :create, :if => -> { self.line_item_personalization }
+    before_validation :copy_personalization, :on => :create, :if => -> { self.line_item_personalization }
 
     private
 
@@ -25,7 +25,6 @@ module Spree
         lip.price = calc.preferred_amount
         lip.currency = calc.preferred_currency
       end
-      lip.save!
     end
 
   end
