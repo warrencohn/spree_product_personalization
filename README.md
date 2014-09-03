@@ -1,7 +1,9 @@
 SpreeProductPersonalization
 ===========================
 
-Introduction goes here.
+A <a href="https://github.com/spree/spree">Spree</a> extension that provides a way to add personalization to a product when adding it to the cart.
+
+It follows the same technique used in another Spree extension <a href="https://github.com/spree-contrib/spree_vouchers">spree_vouchers</a>.
 
 Installation
 ------------
