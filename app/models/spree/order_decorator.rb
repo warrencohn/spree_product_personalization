@@ -20,7 +20,7 @@ module Spree
 
     def personalization_match(line_item, other_line_item)
       lp = line_item.personalization
-      oli = other_line_item.personalization
+      olp = other_line_item.personalization
       if lp.nil?
         olp.nil?
       else

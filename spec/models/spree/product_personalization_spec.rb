@@ -28,10 +28,8 @@ describe Spree::ProductPersonalization do
     expect(product.personalization.name).not_to eq(name)
     expect(product.personalization.calculator.preferred_amount).not_to eq(price)
 
-    params[:personalization_attributes] = {
-      :id => product.personalization.id,
-      :calculator_attributes => { :id => product.personalization.calculator.id }
-    }
+    params[:personalization_attributes][:id] = product.personalization.id
+    params[:personalization_attributes][:calculator_attributes][:id] = product.personalization.calculator.id
     product.update_attributes(params)
 
     expect(product.personalization).to be
@@ -45,11 +43,9 @@ describe Spree::ProductPersonalization do
     product = create(:product_with_personalization)
     pp_id = product.personalization.id
     calc_id = product.personalization.calculator.id
-    params[:personalization_attributes] = {
-      :id => pp_id,
-      :_destroy => true,
-      :calculator_attributes => { :id => calc_id }
-    }
+    params[:personalization_attributes][:id] = pp_id
+    params[:personalization_attributes][:_destroy] = true
+    params[:personalization_attributes][:calculator_attributes][:id] = calc_id
     product.update_attributes(params)
 
     product.reload
