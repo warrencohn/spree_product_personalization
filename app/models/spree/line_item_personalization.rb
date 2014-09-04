@@ -8,10 +8,10 @@ module Spree
       [:value]
     end
 
-    def match?(olip)
-      return false if olip.blank?
+    def match?(olp)
+      return false if olp.blank?
 
-      self.slice(*COMPARISON_KEYS) == olip.slice(*COMPARISON_KEYS)
+      self.slice(*COMPARISON_KEYS) == olp.slice(*COMPARISON_KEYS)
     end
 
   end

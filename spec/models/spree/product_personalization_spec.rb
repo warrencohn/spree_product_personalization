@@ -7,49 +7,53 @@ describe Spree::ProductPersonalization do
   let(:required) { true }
   let(:limit) { 100 }
   let(:options) do
-    { product_personalization_attributes: { name: name, required: required, limit: limit, calculator_attributes: { type: "Spree::Calculator::FlatRate", preferred_amount: price.to_s } } }
+    { personalization_attributes: { name: name, required: required, limit: limit, calculator_attributes: { type: "Spree::Calculator::FlatRate", preferred_amount: price.to_s } } }
   end
-  let(:params) { ActionController::Parameters.new(options).permit(:product_personalization_attributes => Spree::ProductPersonalization.permitted_attributes) }
+  let(:params) { ActionController::Parameters.new(options).permit(:personalization_attributes => Spree::ProductPersonalization.permitted_attributes) }
 
   it "auto save personalization" do
     product = build(:product)
     product.attributes = params
     product.save!
 
-    expect(product.product_personalization).to be
-    expect(product.product_personalization.name).to eq(name)
-    expect(product.product_personalization.required).to eq(required)
-    expect(product.product_personalization.limit).to eq(limit)
-    expect(product.product_personalization.calculator.preferred_amount).to eq(price)
+    expect(product.personalization).to be
+    expect(product.personalization.name).to eq(name)
+    expect(product.personalization.required).to eq(required)
+    expect(product.personalization.limit).to eq(limit)
+    expect(product.personalization.calculator.preferred_amount).to eq(price)
   end
 
   it "auto update personalization" do
     product = create(:product_with_personalization)
-    expect(product.product_personalization.name).not_to eq(name)
-    expect(product.product_personalization.calculator.preferred_amount).not_to eq(price)
+    expect(product.personalization.name).not_to eq(name)
+    expect(product.personalization.calculator.preferred_amount).not_to eq(price)
 
-    params[:product_personalization_attributes][:id] = product.product_personalization.id
-    params[:product_personalization_attributes][:calculator_attributes][:id] = product.product_personalization.calculator.id
+    params[:personalization_attributes] = {
+      :id => product.personalization.id,
+      :calculator_attributes => { :id => product.personalization.calculator.id }
+    }
     product.update_attributes(params)
 
-    expect(product.product_personalization).to be
-    expect(product.product_personalization.name).to eq(name)
-    expect(product.product_personalization.required).to eq(required)
-    expect(product.product_personalization.limit).to eq(limit)
-    expect(product.product_personalization.calculator.preferred_amount).to eq(price)
+    expect(product.personalization).to be
+    expect(product.personalization.name).to eq(name)
+    expect(product.personalization.required).to eq(required)
+    expect(product.personalization.limit).to eq(limit)
+    expect(product.personalization.calculator.preferred_amount).to eq(price)
   end
 
   it "allows destroy personalization" do
     product = create(:product_with_personalization)
-    pp_id = product.product_personalization.id
-    calc_id = product.product_personalization.calculator.id
-    params[:product_personalization_attributes][:id] = pp_id
-    params[:product_personalization_attributes][:_destroy] = true
-    params[:product_personalization_attributes][:calculator_attributes][:id] = calc_id
+    pp_id = product.personalization.id
+    calc_id = product.personalization.calculator.id
+    params[:personalization_attributes] = {
+      :id => pp_id,
+      :_destroy => true,
+      :calculator_attributes => { :id => calc_id }
+    }
     product.update_attributes(params)
 
     product.reload
-    expect(product.product_personalization).not_to be
+    expect(product.personalization).not_to be
     expect(Spree::ProductPersonalization.find_by(id: pp_id)).to be_nil
     expect(Spree::Calculator::FlatRate.find_by(id: calc_id)).to be_nil
   end

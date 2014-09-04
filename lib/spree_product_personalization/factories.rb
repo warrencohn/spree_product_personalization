@@ -12,7 +12,7 @@ FactoryGirl.define do
   end
 
   factory :product_with_personalization, parent: :product do
-    product_personalization { |p| p.association(:product_personalization) }
+    personalization { |p| p.association(:product_personalization) }
   end
 
   factory :variant_with_personalization, parent: :variant do

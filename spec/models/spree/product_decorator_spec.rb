@@ -5,10 +5,10 @@ describe Spree::Product do
   context "duplication" do
 
     let(:product) { create(:product_with_personalization) }
-    let(:source) { product.product_personalization }
+    let(:source) { product.personalization }
 
     it 'clones personalization info' do
-      target = product.duplicate.product_personalization
+      target = product.duplicate.personalization
 
       expect(target).to be
       expect(target.id).not_to eq(source.id)
