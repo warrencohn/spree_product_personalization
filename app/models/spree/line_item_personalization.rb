@@ -2,6 +2,8 @@ module Spree
   class LineItemPersonalization < ActiveRecord::Base
     belongs_to :line_item
 
+    validates_length_of :value, in: Range.new(1, Spree::Config[:personalization_text_limit])
+
     COMPARISON_KEYS = [:name, :value, :price, :currency]
 
     def self.permitted_attributes 
