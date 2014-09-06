@@ -4,6 +4,9 @@ module Spree
 
     belongs_to :product
 
+    validates :name, presence: true
+    validates :limit, numericality: {only_integer: true, greater_than: 0, less_than_or_equal_to: Spree::Config[:personalization_text_limit]}
+
     before_save { self.calculator.preferred_currency = Spree::Config[:currency] }
 
     def self.permitted_attributes 
