@@ -2,7 +2,7 @@ module Spree
   class LineItemPersonalization < ActiveRecord::Base
     belongs_to :line_item
 
-    validates_length_of :value, in: Range.new(1, Spree::Config[:personalization_text_limit])
+    validates_length_of :value, in: Range.new(1, Spree::Personalization::Config[:text_limit])
 
     before_validation { self.value = self.value.strip }
 
