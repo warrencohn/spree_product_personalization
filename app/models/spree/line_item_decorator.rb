@@ -8,14 +8,16 @@ module Spree
   end
 
   LineItem.class_eval do
-    has_one :personalization, class_name: "Spree::LineItemPersonalization", :dependent => :destroy
-    accepts_nested_attributes_for :personalization, :allow_destroy => true
+    has_many :personalizations, class_name: "Spree::LineItemPersonalization", :dependent => :destroy
+    accepts_nested_attributes_for :personalizations, :allow_destroy => true
 
-    before_validation :copy_personalization, :on => :create, :if => -> { self.personalization }
+    before_validation :copy_personalizations, :on => :create, :if => -> { self.personalizations.present? }
 
     private
 
-    def copy_personalization
+    def copy_personalizations
+      self.personalizations.each do |lp|
+      end
       pp = self.product.personalization
       lp = self.personalization
       lp.line_item = self

@@ -1,15 +1,15 @@
 module Spree
   Product.class_eval do
-    has_one :personalization, class_name: "Spree::ProductPersonalization", :dependent => :destroy
-    accepts_nested_attributes_for :personalization, :allow_destroy => true
+    has_many :personalizations, class_name: "Spree::ProductPersonalization", :dependent => :destroy
+    accepts_nested_attributes_for :personalizations, :allow_destroy => true
     
     def duplicate_extra(product)
-      if product.personalization
-        self.personalization = product.personalization.dup
-        self.personalization.calculator = product.personalization.calculator.dup
-        if product.personalization.calculator.respond_to?(:preferred_amount)
-          self.personalization.calculator.preferred_amount = product.personalization.calculator.preferred_amount
-        end
+      product.personalizations.each do |p|
+        new_p = p.dup
+        new_p.product = self
+        new_p.calculator = p.calculator.dup
+        new_p.calculator.preferred_amount = p.calculator.preferred_amount
+        self.personalizations << new_p
       end
     end
   end
