@@ -8,7 +8,7 @@ module Spree
     validates :limit, numericality: {only_integer: true, greater_than: 0, less_than_or_equal_to: Spree::Personalization::Config[:text_limit]}
     validate :check_price
 
-    before_validation { self.name = self.name.strip }
+    before_validation { self.name = self.name.strip if self.name }
 
     before_save { self.calculator.preferred_currency = Spree::Config[:currency] }
 
