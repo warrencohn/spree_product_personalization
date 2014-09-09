@@ -54,4 +54,37 @@ describe Spree::ProductPersonalization do
     expect(Spree::Calculator::FlatRate.find_by(id: calc_id)).to be_nil
   end
 
+  context "validation" do
+    before do
+      @target = build(:product_personalization)
+      expect(@target.valid?).to be_true
+    end
+
+    it "fails when name is too short" do
+      @target.name = ""
+      expect(@target.valid?).to be_false
+    end
+
+    it "fails when name is too long" do
+      @target.name = "a" * (Spree::Personalization::Config[:label_limit] + 1)
+      expect(@target.valid?).to be_false
+    end
+
+    it "fails when limit is too small" do
+      @target.limit = 0
+      expect(@target.valid?).to be_false
+    end
+
+    it "fails when limit is too big" do
+      @target.limit = Spree::Personalization::Config[:text_limit] + 1
+      expect(@target.valid?).to be_false
+    end
+
+    it "fails when price is negative" do
+      @target.calculator.preferred_amount = -1.0
+      expect(@target.valid?).to be_false
+    end
+
+  end
+
 end
