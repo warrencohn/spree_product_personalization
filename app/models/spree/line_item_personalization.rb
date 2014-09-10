@@ -15,6 +15,7 @@ module Spree
     def match?(olp)
       return false if olp.blank?
 
+      olp[:value] = olp[:value].strip if olp[:value]
       self.slice(*COMPARISON_KEYS) == olp.slice(*COMPARISON_KEYS)
     end
 
