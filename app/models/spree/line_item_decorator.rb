@@ -11,11 +11,11 @@ module Spree
     has_one :personalization, class_name: "Spree::LineItemPersonalization", :dependent => :destroy
     accepts_nested_attributes_for :personalization, :allow_destroy => true
 
-    before_validation :copy_personalization, :on => :create, :if => -> { self.personalization }
+    before_save :save_personalization, :if => -> { self.personalization }
 
     private
 
-    def copy_personalization
+    def save_personalization
       pp = self.product.personalization
       if pp
         lp = self.personalization
@@ -24,6 +24,7 @@ module Spree
         calc = pp.calculator
         lp.price = calc.preferred_amount
         lp.currency = calc.preferred_currency
+        lp.save!
       else
         # line_item personalization should not be created if the product doesn't have personalization
         self.personalization = nil
