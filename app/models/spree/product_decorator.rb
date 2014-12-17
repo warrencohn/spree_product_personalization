@@ -2,7 +2,7 @@ module Spree
   Product.class_eval do
     has_many :personalizations, class_name: "Spree::ProductPersonalization", :dependent => :destroy
     accepts_nested_attributes_for :personalizations, :allow_destroy => true
-    
+
     def duplicate_extra(product)
       product.personalizations.each do |p|
         new_p = p.dup

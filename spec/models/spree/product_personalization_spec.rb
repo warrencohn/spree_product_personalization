@@ -13,6 +13,57 @@ describe Spree::ProductPersonalization do
   end
   let(:params) { ActionController::Parameters.new(options).permit(:personalizations_attributes => Spree::ProductPersonalization.permitted_attributes) }
 
+  describe "Validations" do
+    before do
+      @target = build(:product_personalization)
+      expect(@target.valid?).to be_true
+    end
+
+    it "fails when name is too short" do
+      @target.name = ""
+      expect(@target.valid?).to be_false
+    end
+
+    it "fails when name is too long" do
+      @target.name = "a" * (Spree::Personalization::Config[:label_limit] + 1)
+      expect(@target.valid?).to be_false
+    end
+
+    it "fails when limit is too small" do
+      @target.limit = 0
+      expect(@target.valid?).to be_false
+    end
+
+    it "fails when limit is too big" do
+      @target.limit = Spree::Personalization::Config[:text_limit] + 1
+      expect(@target.valid?).to be_false
+    end
+
+    it "fails when price is negative" do
+      @target.calculator.preferred_amount = -1.0
+      expect(@target.valid?).to be_false
+    end
+
+    context "attribute kind" do
+      it 'should be invalid for empty value' do
+        @target.kind = nil
+        expect(@target.valid?).to be_false
+      end
+
+      it 'should be invalid for bad values' do
+        @target.kind = "random"
+        expect(@target.valid?).to be_false
+      end
+
+      it 'should be valid for a valid value' do
+        @target.kind = "text"
+        expect(@target.valid?).to be_true
+        @target.kind = "options"
+        expect(@target.valid?).to be_true
+      end
+    end
+  end
+
   it "saves personalization" do
     product = build(:product)
     product.attributes = params
@@ -64,39 +115,6 @@ describe Spree::ProductPersonalization do
     expect(product.personalizations.count).to eq(count-1)
     expect(Spree::ProductPersonalization.find_by(id: pp_id)).to be_nil
     expect(Spree::Calculator::FlatRate.find_by(id: calc_id)).to be_nil
-  end
-
-  context "validation" do
-    before do
-      @target = build(:product_personalization)
-      expect(@target.valid?).to be_true
-    end
-
-    it "fails when name is too short" do
-      @target.name = ""
-      expect(@target.valid?).to be_false
-    end
-
-    it "fails when name is too long" do
-      @target.name = "a" * (Spree::Personalization::Config[:label_limit] + 1)
-      expect(@target.valid?).to be_false
-    end
-
-    it "fails when limit is too small" do
-      @target.limit = 0
-      expect(@target.valid?).to be_false
-    end
-
-    it "fails when limit is too big" do
-      @target.limit = Spree::Personalization::Config[:text_limit] + 1
-      expect(@target.valid?).to be_false
-    end
-
-    it "fails when price is negative" do
-      @target.calculator.preferred_amount = -1.0
-      expect(@target.valid?).to be_false
-    end
-
   end
 
 end

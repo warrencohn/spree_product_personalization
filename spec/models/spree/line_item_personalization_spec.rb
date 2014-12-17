@@ -6,7 +6,7 @@ describe Spree::LineItemPersonalization do
   let(:value_1) { "Happy Birthday!" }
   let(:value_2) { "Hello World!" }
   let(:order) { create(:order) }
-  let(:variant) { create(:variant_with_personalization) }
+  let(:variant) { create(:variant_with_personalizations) }
   let(:product_personalization) { variant.product.personalization }
 
   def get_params(value)

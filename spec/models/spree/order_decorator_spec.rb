@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Spree::Order do
 
   context "#merge!" do
-    let(:variant) { create(:variant_with_personalization) }
+    let(:variant) { create(:variant_with_personalizations) }
     let(:order_1) { create(:order) }
     let(:order_2) { create(:order) }
     let(:value_1) { "Happy Birthday!" }

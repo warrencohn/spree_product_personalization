@@ -16,11 +16,11 @@ module Spree
     private
 
     def copy_personalizations
-      self.personalizations.each do |lp|
-      end
-      pp = self.product.personalization
+      # self.personalizations.each do |lp|
+      # end
+      pp = self.product.personalizations.first
       if pp
-        lp = self.personalization
+        lp = self.personalizations.first
         lp.line_item = self
         lp.name = pp.name
         calc = pp.calculator
@@ -29,7 +29,7 @@ module Spree
         lp.save!
       else
         # line_item personalization should not be created if the product doesn't have personalization
-        self.personalization = nil
+        self.personalizations = nil
       end
     end
 
