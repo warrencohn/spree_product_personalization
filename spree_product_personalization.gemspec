@@ -2,7 +2,7 @@
 Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.name        = 'spree_product_personalization'
-  s.version     = '2.2.5'
+  s.version     = '2.2.0'
   s.summary     = 'Product Personalization'
   s.description = 'Allow adding personalization to product'
   s.required_ruby_version = '>= 2.1.1'

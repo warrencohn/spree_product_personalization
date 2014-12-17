@@ -19,13 +19,17 @@ module Spree
       self.personalizations.each do |lp|
       end
       pp = self.product.personalization
-      lp = self.personalization
-      lp.line_item = self
       if pp
+        lp = self.personalization
+        lp.line_item = self
         lp.name = pp.name
         calc = pp.calculator
         lp.price = calc.preferred_amount
         lp.currency = calc.preferred_currency
+        lp.save!
+      else
+        # line_item personalization should not be created if the product doesn't have personalization
+        self.personalization = nil
       end
     end
 
