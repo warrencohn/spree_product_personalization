@@ -48,18 +48,60 @@ describe Spree::ProductPersonalization do
       it 'should be invalid for empty value' do
         @target.kind = nil
         expect(@target.valid?).to be_false
+        expect(@target.errors.full_messages.first).to eq "Kind  is not a valid type of personalization"
       end
 
       it 'should be invalid for bad values' do
         @target.kind = "random"
         expect(@target.valid?).to be_false
+        expect(@target.errors.full_messages.first).to eq "Kind random is not a valid type of personalization"
       end
 
       it 'should be valid for a valid value' do
         @target.kind = "text"
         expect(@target.valid?).to be_true
         @target.kind = "options"
+        option_value = create(:option_value)
+        @target.option_values << option_value
         expect(@target.valid?).to be_true
+      end
+    end
+
+    context "#check_kind" do
+      context "if of kind 'text'" do
+        before do
+          @target.kind = 'text'
+        end
+
+        it 'should be valid if option values are absent' do
+          @target.option_values = []
+          expect(@target.valid?).to be_true
+        end
+
+        it 'should be invalid if option values are present' do
+          option_value = create(:option_value)
+          @target.option_values << option_value
+          expect(@target.valid?).to be_false
+          expect(@target.errors.full_messages.first).to eq "Text personalization cannot have options"
+        end
+      end
+
+      context "if of kind 'options'" do
+        before do
+          @target.kind = 'options'
+        end
+
+        it 'should be invalid if option values are absent' do
+          @target.option_values = []
+          expect(@target.valid?).to be_false
+          expect(@target.errors.full_messages.first).to eq "Options personalization should have options"
+        end
+
+        it 'should be valid if option values are present' do
+          option_value = create(:option_value)
+          @target.option_values << option_value
+          expect(@target.valid?).to be_true
+        end
       end
     end
   end

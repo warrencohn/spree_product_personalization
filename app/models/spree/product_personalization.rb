@@ -10,6 +10,7 @@ module Spree
     validates :limit, numericality: {only_integer: true, greater_than: 0, less_than_or_equal_to: Spree::Personalization::Config[:text_limit]}
     validates :kind, inclusion: { in: %w(text options), message: "%{value} is not a valid type of personalization" }
     validate :check_price
+    validate :check_kind
 
     before_validation { self.name = self.name.strip if self.name }
 
@@ -17,6 +18,14 @@ module Spree
 
     def self.permitted_attributes
       [:id, :name, :kind, :required, :limit, :_destroy, :calculator_attributes => [:id, :type, :preferred_amount]]
+    end
+
+    def text?
+      kind == 'text'
+    end
+
+    def options?
+      kind == 'options'
     end
 
     private
@@ -27,5 +36,14 @@ module Spree
       end
     end
 
+    def check_kind
+      if text? && option_values.present?
+        errors.add(:base, Spree.t('errors.personalization_text_cannot_have_options'))
+      end
+
+      if options? && option_values.empty?
+        errors.add(:base, Spree.t('errors.personalization_options_should_have_options'))
+      end
+    end
   end
 end

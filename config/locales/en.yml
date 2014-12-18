@@ -5,3 +5,5 @@ en:
   spree:
     errors:
       increasing_price_can_not_be_negative: "Increasing price can not be negative"
+      personalization_text_cannot_have_options: "Text personalization cannot have options"
+      personalization_options_should_have_options: "Options personalization should have options"
