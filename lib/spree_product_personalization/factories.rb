@@ -13,6 +13,12 @@ FactoryGirl.define do
     calculator { |p| p.association(:personalization_calculator) }
   end
 
+  factory :option_value_product_personalization, :class => Spree::OptionValueProductPersonalization do
+    product_personalization
+    option_value
+    calculator { |p| p.association(:personalization_calculator) }
+  end
+
   factory :product_with_personalizations, parent: :product do
     ignore do
       personalization_count 3

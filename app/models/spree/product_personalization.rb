@@ -3,7 +3,8 @@ module Spree
     include Spree::Core::CalculatedAdjustments
 
     belongs_to :product
-    has_and_belongs_to_many :option_values, join_table: :spree_option_values_product_personalizations
+    has_many :option_value_product_personalizations, class_name: 'Spree::OptionValueProductPersonalization', dependent: :destroy, inverse_of: :product_personalization
+    has_many :option_values, class_name: 'Spree::OptionValueProductPersonalization', through: :option_value_product_personalizations
 
     validates :name, length: {minimum: 1, maximum: Spree::Personalization::Config[:label_limit]}
     validates :name, uniqueness: {scope: :product_id}
@@ -37,11 +38,11 @@ module Spree
     end
 
     def check_kind
-      if text? && option_values.present?
+      if text? && option_value_product_personalizations.present?
         errors.add(:base, Spree.t('errors.personalization_text_cannot_have_options'))
       end
 
-      if options? && option_values.empty?
+      if options? && option_value_product_personalizations.empty?
         errors.add(:base, Spree.t('errors.personalization_options_should_have_options'))
       end
     end

@@ -61,8 +61,8 @@ describe Spree::ProductPersonalization do
         @target.kind = "text"
         expect(@target.valid?).to be_true
         @target.kind = "options"
-        option_value = create(:option_value)
-        @target.option_values << option_value
+        option_value_product_personalization = build(:option_value_product_personalization, product_personalization: @target)
+        @target.option_value_product_personalizations << option_value_product_personalization
         expect(@target.valid?).to be_true
       end
     end
@@ -74,13 +74,13 @@ describe Spree::ProductPersonalization do
         end
 
         it 'should be valid if option values are absent' do
-          @target.option_values = []
+          @target.option_value_product_personalizations = []
           expect(@target.valid?).to be_true
         end
 
         it 'should be invalid if option values are present' do
-          option_value = create(:option_value)
-          @target.option_values << option_value
+          option_value_product_personalization = build(:option_value_product_personalization, product_personalization: @target)
+          @target.option_value_product_personalizations << option_value_product_personalization
           expect(@target.valid?).to be_false
           expect(@target.errors.full_messages.first).to eq "Text personalization cannot have options"
         end
@@ -92,14 +92,14 @@ describe Spree::ProductPersonalization do
         end
 
         it 'should be invalid if option values are absent' do
-          @target.option_values = []
+          @target.option_value_product_personalizations = []
           expect(@target.valid?).to be_false
           expect(@target.errors.full_messages.first).to eq "Options personalization should have options"
         end
 
         it 'should be valid if option values are present' do
-          option_value = create(:option_value)
-          @target.option_values << option_value
+          option_value_product_personalization = build(:option_value_product_personalization, product_personalization: @target)
+          @target.option_value_product_personalizations << option_value_product_personalization
           expect(@target.valid?).to be_true
         end
       end
