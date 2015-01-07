@@ -8,6 +8,7 @@ module Spree
 
     validates :name, length: {minimum: 1, maximum: Spree::Personalization::Config[:label_limit]}
     validates :name, uniqueness: {scope: :product_id}
+    validates :description, length: {maximum: Spree::Personalization::Config[:description_limit]}
     validates :limit, numericality: {only_integer: true, greater_than: 0, less_than_or_equal_to: Spree::Personalization::Config[:text_limit]}
     validates :kind, inclusion: { in: %w(text options), message: "%{value} is not a valid type of personalization" }
     validate :check_price
@@ -18,7 +19,7 @@ module Spree
     before_save { self.calculator.preferred_currency = Spree::Config[:currency] }
 
     def self.permitted_attributes
-      [:id, :name, :kind, :required, :limit, :_destroy, :calculator_attributes => [:id, :type, :preferred_amount]]
+      [:id, :name, :description, :kind, :required, :limit, :_destroy, :calculator_attributes => [:id, :type, :preferred_amount]]
     end
 
     def text?

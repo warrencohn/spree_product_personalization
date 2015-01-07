@@ -5,7 +5,16 @@ describe Spree::ProductPersonalization do
   let(:count) { 5 }
   let(:attributes) do
     attrs = []
-    count.times { attrs << { name: generate(:personalization_name), required: [true, false].sample, limit: rand(10...1000), calculator_attributes: { type: "Spree::Calculator::FlatRate", preferred_amount: Money.new(rand(100...500)).to_s } } }
+    count.times { attrs << {
+      name: generate(:personalization_name),
+      description: generate(:personalization_description),
+      required: [true, false].sample,
+      limit: rand(10...1000),
+      calculator_attributes: {
+        type: "Spree::Calculator::FlatRate",
+        preferred_amount: Money.new(rand(100...500)).to_s
+      }
+    }}
     attrs
   end
   let(:options) do
@@ -26,6 +35,11 @@ describe Spree::ProductPersonalization do
 
     it "fails when name is too long" do
       @target.name = "a" * (Spree::Personalization::Config[:label_limit] + 1)
+      expect(@target.valid?).to be_false
+    end
+
+    it "fails when description is too long" do
+      @target.description = "a" * (Spree::Personalization::Config[:description_limit] + 1)
       expect(@target.valid?).to be_false
     end
 
@@ -116,6 +130,7 @@ describe Spree::ProductPersonalization do
     product.personalizations.each_with_index do |t, i|
       s = attributes[i]
       expect(t.name).to eq(s[:name])
+      expect(t.description).to eq(s[:description])
       expect(t.required).to eq(s[:required])
       expect(t.limit).to eq(s[:limit])
       expect(t.calculator.preferred_amount).to eq(BigDecimal.new(s[:calculator_attributes][:preferred_amount]))
@@ -135,6 +150,7 @@ describe Spree::ProductPersonalization do
     product.personalizations.each_with_index do |t, i|
       s = attributes[i]
       expect(t.name).to eq(s[:name])
+      expect(t.description).to eq(s[:description])
       expect(t.required).to eq(s[:required])
       expect(t.limit).to eq(s[:limit])
       expect(t.calculator.preferred_amount).to eq(BigDecimal.new(s[:calculator_attributes][:preferred_amount]))

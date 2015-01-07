@@ -1,6 +1,7 @@
 FactoryGirl.define do
 
   sequence(:personalization_name) { |n| "Engrave-#{n}" }
+  sequence(:personalization_description) { |n| "Description-#{n}" }
 
   factory :personalization_calculator, :class => Spree::Calculator::FlatRate do
     preferred_amount 3.0
@@ -8,6 +9,7 @@ FactoryGirl.define do
 
   factory :product_personalization, :class => Spree::ProductPersonalization do
     name { generate(:personalization_name) }
+    description { generate(:personalization_description) }
     required true
     limit 200
     calculator { |p| p.association(:personalization_calculator) }

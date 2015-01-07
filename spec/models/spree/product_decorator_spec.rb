@@ -15,6 +15,7 @@ describe Spree::Product do
       target.each_with_index do |t, i|
         expect(target[i].id).not_to eq(source[i].id)
         expect(target[i].name).to eq(source[i].name)
+        expect(target[i].description).to eq(source[i].description)
         expect(target[i].required).to eq(source[i].required)
         expect(target[i].limit).to eq(source[i].limit)
         expect(target[i].calculator.id).to_not eq(source[i].calculator.id)
