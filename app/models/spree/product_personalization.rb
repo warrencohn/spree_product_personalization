@@ -10,7 +10,7 @@ module Spree
     validates :name, uniqueness: {scope: :product_id}
     validates :description, length: {maximum: Spree::Personalization::Config[:description_limit]}
     validates :limit, numericality: {only_integer: true, greater_than: 0, less_than_or_equal_to: Spree::Personalization::Config[:text_limit]}
-    validates :kind, inclusion: { in: %w(text options), message: "%{value} is not a valid type of personalization" }
+    validates :kind, inclusion: { in: %w(text list), message: "%{value} is not a valid type of personalization" }
     validate :check_price
     validate :check_kind
 
@@ -26,8 +26,8 @@ module Spree
       kind == 'text'
     end
 
-    def options?
-      kind == 'options'
+    def list?
+      kind == 'list'
     end
 
     private
@@ -43,7 +43,7 @@ module Spree
         errors.add(:base, Spree.t('errors.personalization_text_cannot_have_options'))
       end
 
-      if options? && option_value_product_personalizations.empty?
+      if list? && option_value_product_personalizations.empty?
         errors.add(:base, Spree.t('errors.personalization_options_should_have_options'))
       end
     end

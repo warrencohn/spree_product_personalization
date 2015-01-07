@@ -74,7 +74,7 @@ describe Spree::ProductPersonalization do
       it 'should be valid for a valid value' do
         @target.kind = "text"
         expect(@target.valid?).to be_true
-        @target.kind = "options"
+        @target.kind = "list"
         option_value_product_personalization = build(:option_value_product_personalization, product_personalization: @target)
         @target.option_value_product_personalizations << option_value_product_personalization
         expect(@target.valid?).to be_true
@@ -100,9 +100,9 @@ describe Spree::ProductPersonalization do
         end
       end
 
-      context "if of kind 'options'" do
+      context "if of kind 'list'" do
         before do
-          @target.kind = 'options'
+          @target.kind = 'list'
         end
 
         it 'should be invalid if option values are absent' do
