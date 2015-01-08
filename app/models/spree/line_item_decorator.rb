@@ -15,6 +15,18 @@ module Spree
 
 
     def personalizations_match_with?(other_line_item_or_personalizations_attributes)
+      if other_line_item_or_personalizations_attributes.kind_of? LineItem
+        personalizations_attributes = other_line_item_or_personalizations_attributes.personalizations.map(&:attributes)
+      elsif other_line_item_or_personalizations_attributes.kind_of? Hash
+        personalizations_attributes = other_line_item_or_personalizations_attributes[:personalizations_attributes] || []
+        personalizations_attributes = fill_personalizations_attributes(personalizations_attributes)
+      end
+
+      if personalizations_attributes.present?
+        matching_personalizations_attributes?(personalizations_attributes)
+      else
+        false
+      end
     end
 
     private
@@ -22,11 +34,11 @@ module Spree
     def copy_personalizations
       if self.product.personalizations.present?
         self.personalizations.each do |line_item_personalization|
-          matching_product_personalization = self.product.personalizations.find {|product_personalization| product_personalization.name == line_item_personalization.name }
+          relevant_product_personalization = product_personalization_with_name(line_item_personalization.name)
 
-          if matching_product_personalization
+          if relevant_product_personalization
             line_item_personalization.line_item = self
-            calculator = matching_product_personalization.calculator
+            calculator = relevant_product_personalization.calculator
             line_item_personalization.price = calculator.preferred_amount
             line_item_personalization.currency = calculator.preferred_currency
           else
@@ -36,6 +48,40 @@ module Spree
       else
         # line_item personalization should not be created if the product doesn't have personalization
         self.personalizations = []
+      end
+    end
+
+    def product_personalization_with_name(name)
+      product.personalizations.detect { |product_personalization| product_personalization.name == name }
+    end
+
+    def fill_personalizations_attributes(personalizations_attributes)
+      personalizations_attributes.each do |personalization_attributes|
+        relevant_product_personalization = product_personalization_with_name(personalization_attributes[:name])
+
+        if relevant_product_personalization
+          calculator = relevant_product_personalization.calculator
+          personalization_attributes[:price] = calculator.preferred_amount
+          personalization_attributes[:currency] = calculator.preferred_currency
+        end
+      end
+
+      personalizations_attributes
+    end
+
+    def matching_personalizations_attributes?(personalizations_attributes)
+      if personalizations.present?
+        return false if personalizations.count != personalizations_attributes.count
+
+        personalizations.each do |line_item_personalization|
+          match = personalizations_attributes.detect do |personalization_attributes|
+            line_item_personalization.match? personalization_attributes.with_indifferent_access
+          end
+          return false unless match
+        end
+        true
+      else
+        personalizations_attributes.blank?
       end
     end
 
