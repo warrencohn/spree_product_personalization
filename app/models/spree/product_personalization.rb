@@ -3,8 +3,9 @@ module Spree
     include Spree::Core::CalculatedAdjustments
 
     belongs_to :product
-    has_many :option_value_product_personalizations, class_name: 'Spree::OptionValueProductPersonalization', dependent: :destroy, inverse_of: :product_personalization
+    has_many :option_value_product_personalizations, -> { order(:position) }, class_name: 'Spree::OptionValueProductPersonalization', dependent: :destroy, inverse_of: :product_personalization
     has_many :option_values, class_name: 'Spree::OptionValueProductPersonalization', through: :option_value_product_personalizations
+    accepts_nested_attributes_for :option_value_product_personalizations, :allow_destroy => true
 
     validates :name, length: {minimum: 1, maximum: Spree::Personalization::Config[:label_limit]}
     validates :name, uniqueness: {scope: :product_id}
