@@ -8,8 +8,8 @@ module Spree
 
     COMPARISON_KEYS = [:name, :value, :price, :currency]
 
-    def self.permitted_attributes 
-      [:value]
+    def self.permitted_attributes
+      [:name, :value]
     end
 
     def match?(olp)
@@ -18,6 +18,5 @@ module Spree
       olp[:value] = olp[:value].strip if olp[:value]
       self.slice(*COMPARISON_KEYS) == olp.slice(*COMPARISON_KEYS)
     end
-
   end
 end

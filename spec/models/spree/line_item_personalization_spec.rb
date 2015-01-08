@@ -2,65 +2,96 @@ require 'spec_helper'
 
 describe Spree::LineItemPersonalization do
 
-  let(:quantity) { 2 }
-  let(:value_1) { "Happy Birthday!" }
-  let(:value_2) { "Hello World!" }
+  let (:quantity) { 2 }
+  let (:variant) { create(:variant_with_personalizations) }
+  let (:product_personalizations) { variant.product.personalizations }
+  let (:personalization_1) { { name: product_personalizations[0].name, value: 'Red' } }
+  let (:personalization_2) { { name: product_personalizations[1].name, value: 'Happy Birthday' } }
   let(:order) { create(:order) }
-  let(:variant) { create(:variant_with_personalizations) }
-  let(:product_personalization) { variant.product.personalization }
 
-  def get_params(value)
-    options  = { personalization_attributes: { value: value } }
-    ActionController::Parameters.new(options).permit(:personalization_attributes => Spree::LineItemPersonalization.permitted_attributes)
+  # before :each do
+  #   @quantity                 = 2
+  #   @variant                  = create(:variant_with_personalizations)
+  #   @product_personalizations = @variant.product.personalizations
+  #   @personalization_1        = { name: @product_personalizations[0].name, value: 'Red' }
+  #   @personalization_2        = { name: @product_personalizations[1].name, value: 'Happy Birthday' }
+  #   @order                    = create(:order)
+  # end
+
+  def get_params(personalization_attributes)
+    options  = { personalizations_attributes: personalization_attributes }
+    ActionController::Parameters.new(options).permit(:personalizations_attributes => Spree::LineItemPersonalization.permitted_attributes)
   end
 
   it "adds line_item with personalization to the order" do
-    before = order.line_items.count
-    line_item = order.contents.add(variant, quantity, get_params(value_1))
+    original_count = order.line_items.count
+    line_item = order.contents.add(variant, quantity, get_params([personalization_1]))
     order.reload
 
-    expect(order.line_items.count).to eq(before + 1)
+    expect(order.line_items.count).to eq(original_count + 1)
     expect(line_item.quantity).to eq(quantity)
-    expect(line_item.personalization).to be
-    expect(line_item.personalization.value).to eq(value_1)
-    expect(line_item.personalization.name).to eq(product_personalization.name)
-    expect(line_item.personalization.price).to eq(product_personalization.calculator.preferred_amount)
+    expect(line_item.personalizations).to be
+    expect(line_item.personalizations.first.value).to eq(personalization_1[:value])
+    expect(line_item.personalizations.first.name).to eq(product_personalizations.first.name)
+    expect(line_item.personalizations.first.price).to eq(product_personalizations.first.calculator.preferred_amount)
   end
 
   it "adds line_item of variant that does not have personalization to the order" do
-    before = order.line_items.count
-    line_item = order.contents.add(create(:variant), quantity, get_params(value_1))
+    original_count = order.line_items.count
+    line_item = order.contents.add(create(:variant), quantity, get_params([personalization_1]))
     order.reload
 
-    expect(order.line_items.count).to eq(before + 1)
+    expect(order.line_items.count).to eq(original_count + 1)
     expect(line_item.quantity).to eq(quantity)
-    expect(line_item.personalization).to be_nil
+    expect(line_item.personalizations).to eq([])
   end
 
   it "match line_item when personalization is same" do
-    old_item = order.contents.add(variant, quantity, get_params(value_1))
-    new_item = order.contents.add(variant, quantity, get_params(value_1))
+    old_item = order.contents.add(variant, quantity, get_params([personalization_1]))
+    new_item = order.contents.add(variant, quantity, get_params([personalization_1]))
 
     expect(new_item.id).to eq(old_item.id)
     expect(new_item.quantity).to eq(quantity * 2)
   end
 
   it "create new line_item when personalization is different" do
-    old_item = order.contents.add(variant, quantity, get_params(value_1))
-    new_item = order.contents.add(variant, quantity, get_params(value_2))
+    old_item = order.contents.add(variant, quantity, get_params([personalization_1]))
+    new_item = order.contents.add(variant, quantity, get_params([personalization_2]))
 
     expect(new_item.id).not_to eq(old_item.id)
   end
 
+  context "if first order has more personalizations than the second" do
+    before do
+      @old_item = order.contents.add(variant, quantity, get_params([personalization_1, personalization_2]))
+      @new_item = order.contents.add(variant, quantity, get_params([personalization_2]))
+    end
+
+    it "creats a new line_item" do
+      expect(@new_item.id).not_to eq(@old_item.id)
+    end
+  end
+
+  context "if the second order has more personalizations than the first" do
+    before do
+      @old_item = order.contents.add(variant, quantity, get_params([personalization_1]))
+      @new_item = order.contents.add(variant, quantity, get_params([personalization_1, personalization_2]))
+    end
+
+    it "creats a new line_item" do
+      expect(@new_item.id).not_to eq(@old_item.id)
+    end
+  end
+
   it "create new line_item when old line_item does not have personalization while the new one does" do
     old_item = order.contents.add(variant, quantity)
-    new_item = order.contents.add(variant, quantity, get_params(value_1))
+    new_item = order.contents.add(variant, quantity, get_params([personalization_1]))
 
     expect(new_item.id).not_to eq(old_item.id)
   end
 
   it "create new line_item when old line_item has personalization while the new one doesn't" do
-    old_item = order.contents.add(variant, quantity, get_params(value_1))
+    old_item = order.contents.add(variant, quantity, get_params([personalization_1]))
     new_item = order.contents.add(variant, quantity)
 
     expect(new_item.id).not_to eq(old_item.id)
@@ -69,7 +100,7 @@ describe Spree::LineItemPersonalization do
   it "create new line_item when params is in wrong format" do
     old_item = order.contents.add(variant, quantity)
 
-    expect(order.personalization_match(old_item, 1)).to be_false
+    expect(order.personalizations_match(old_item, 1)).to be_false
   end
 
 end
