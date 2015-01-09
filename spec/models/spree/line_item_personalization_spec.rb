@@ -9,15 +9,6 @@ describe Spree::LineItemPersonalization do
   let (:personalization_2) { { name: product_personalizations[1].name, value: 'Happy Birthday' } }
   let(:order) { create(:order) }
 
-  # before :each do
-  #   @quantity                 = 2
-  #   @variant                  = create(:variant_with_personalizations)
-  #   @product_personalizations = @variant.product.personalizations
-  #   @personalization_1        = { name: @product_personalizations[0].name, value: 'Red' }
-  #   @personalization_2        = { name: @product_personalizations[1].name, value: 'Happy Birthday' }
-  #   @order                    = create(:order)
-  # end
-
   def get_params(personalization_attributes)
     options  = { personalizations_attributes: personalization_attributes }
     ActionController::Parameters.new(options).permit(:personalizations_attributes => Spree::LineItemPersonalization.permitted_attributes)
