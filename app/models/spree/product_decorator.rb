@@ -9,6 +9,12 @@ module Spree
         new_p.product = self
         new_p.calculator = p.calculator.dup
         new_p.calculator.preferred_amount = p.calculator.preferred_amount
+        new_p.option_value_product_personalizations = p.option_value_product_personalizations.map do |v|
+          new_v = v.dup
+          new_v.calculator = v.calculator.dup
+          new_v.calculator.preferred_amount = v.calculator.preferred_amount
+          new_v
+        end
         self.personalizations << new_p
       end
     end
