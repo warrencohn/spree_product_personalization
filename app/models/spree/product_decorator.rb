@@ -18,5 +18,9 @@ module Spree
         self.personalizations << new_p
       end
     end
+
+    def personalization_with_name(name)
+      personalizations.detect { |product_personalization| product_personalization.name == name }
+    end
   end
 end

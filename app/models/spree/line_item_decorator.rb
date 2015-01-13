@@ -34,7 +34,7 @@ module Spree
     def copy_personalizations
       if self.product.personalizations.present?
         self.personalizations.each do |line_item_personalization|
-          relevant_product_personalization = product_personalization_with_name(line_item_personalization.name)
+          relevant_product_personalization = product.personalization_with_name(line_item_personalization.name)
 
           if relevant_product_personalization
             line_item_personalization.line_item = self
@@ -51,13 +51,9 @@ module Spree
       end
     end
 
-    def product_personalization_with_name(name)
-      product.personalizations.detect { |product_personalization| product_personalization.name == name }
-    end
-
     def fill_personalizations_attributes(personalizations_attributes)
       personalizations_attributes.each do |personalization_attributes|
-        relevant_product_personalization = product_personalization_with_name(personalization_attributes[:name])
+        relevant_product_personalization = product.personalization_with_name(personalization_attributes[:name])
 
         if relevant_product_personalization
           calculator = relevant_product_personalization.calculator
