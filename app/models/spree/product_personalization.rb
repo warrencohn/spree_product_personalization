@@ -31,6 +31,17 @@ module Spree
       kind == 'list'
     end
 
+    def increase_price(index = 0)
+      price = 0
+      if text?
+        price = self.calculator.preferred_amount
+      elsif list?
+        ovp = self.option_value_product_personalizations[index]
+        price = ovp.calculator.preferred_amount if ovp
+      end
+      price
+    end
+
     private
 
     def check_price
