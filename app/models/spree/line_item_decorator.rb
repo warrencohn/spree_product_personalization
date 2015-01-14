@@ -38,6 +38,7 @@ module Spree
 
           if relevant_product_personalization
             line_item_personalization.line_item = self
+            line_item_personalization.limit = relevant_product_personalization.limit
             calculator = relevant_product_personalization.calculator
             line_item_personalization.price = calculator.preferred_amount
             line_item_personalization.currency = calculator.preferred_currency

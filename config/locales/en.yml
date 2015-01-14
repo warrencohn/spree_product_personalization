@@ -7,3 +7,5 @@ en:
       increasing_price_can_not_be_negative: "Increasing price can not be negative"
       personalization_text_cannot_have_options: "Text personalization cannot have options"
       personalization_options_should_have_options: "Options personalization should have options"
+      line_item_personalization_value_greater_than_zero: "Value is too short (minimum is %{size} characters)"
+      line_item_personalization_value_less_than_limit: "Value is too long (maximum is %{size} characters)"

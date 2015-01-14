@@ -2,7 +2,6 @@ require 'spec_helper'
 
 describe Spree::Variant do
 
-
   let (:quantity) { 2 }
   let (:variant) { create(:variant_with_personalizations, price: 15) }
   let (:product_personalizations) { variant.product.personalizations }
@@ -47,7 +46,7 @@ describe Spree::Variant do
       end
 
       it "retains just the price of the product" do
-          expect(order.total.to_s).to eq "20.0"
+        expect(order.total.to_s).to eq "20.0"
       end
     end
   end

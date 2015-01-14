@@ -14,6 +14,34 @@ describe Spree::LineItemPersonalization do
     ActionController::Parameters.new(options).permit(:personalizations_attributes => Spree::LineItemPersonalization.permitted_attributes)
   end
 
+  context "validations" do
+    context "#value" do
+      before do
+        @line_item_personalization = Spree::LineItemPersonalization.new
+      end
+
+      it "should have length greater than 1" do
+        @line_item_personalization.value = ""
+        expect(@line_item_personalization.valid?).to be_false
+        expect(@line_item_personalization.errors[:value].first).to eq "Value is too short (minimum is 1 characters)"
+
+        @line_item_personalization.value = "A"
+        expect(@line_item_personalization.valid?).to be_true
+      end
+
+      it "should have length less than limit" do
+        @line_item_personalization.limit = 5
+        @line_item_personalization.value = "A long value"
+        expect(@line_item_personalization.valid?).to be_false
+        expect(@line_item_personalization.errors[:value].first).to eq "Value is too long (maximum is 5 characters)"
+
+        @line_item_personalization.value = "long"
+        expect(@line_item_personalization.valid?).to be_true
+      end
+    end
+
+  end
+
   it "adds line_item with personalization to the order" do
     original_count = order.line_items.count
     line_item = order.contents.add(variant, quantity, get_params([personalization_1]))
