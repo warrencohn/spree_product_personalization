@@ -23,7 +23,7 @@ describe Spree::LineItemPersonalization do
       it "should have length greater than 1" do
         @line_item_personalization.value = ""
         expect(@line_item_personalization.valid?).to be_false
-        expect(@line_item_personalization.errors[:value].first).to eq "Value is too short (minimum is 1 characters)"
+        expect(@line_item_personalization.errors[:value].first).to eq "is too short (minimum is 1 characters)"
 
         @line_item_personalization.value = "A"
         expect(@line_item_personalization.valid?).to be_true
@@ -33,7 +33,7 @@ describe Spree::LineItemPersonalization do
         @line_item_personalization.limit = 5
         @line_item_personalization.value = "A long value"
         expect(@line_item_personalization.valid?).to be_false
-        expect(@line_item_personalization.errors[:value].first).to eq "Value is too long (maximum is 5 characters)"
+        expect(@line_item_personalization.errors[:value].first).to eq "is too long (maximum is 5 characters)"
 
         @line_item_personalization.value = "long"
         expect(@line_item_personalization.valid?).to be_true
