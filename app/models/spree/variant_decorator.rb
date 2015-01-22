@@ -7,7 +7,14 @@ module Spree
       options.each do |personalization_attributes|
         personalization = product.personalization_with_name(personalization_attributes[:name])
 
-        calc = personalization.try(:calculator)
+        if personalization && personalization.list?
+          option_value_id = personalization_attributes[:option_value_id]
+          option_value_product_personalization = personalization.option_value_product_personalizations.find_by_option_value_id(option_value_id)
+          calc = option_value_product_personalization.try(:calculator)
+        else
+          calc = personalization.try(:calculator)
+        end
+
         if calc && calc.preferred_currency == currency
           modifier_amount += calc.preferred_amount
         end

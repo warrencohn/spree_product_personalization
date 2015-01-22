@@ -9,7 +9,7 @@ module Spree
     COMPARISON_KEYS = [:name, :value, :price, :currency]
 
     def self.permitted_attributes
-      [:name, :value]
+      [:name, :value, :option_value_id]
     end
 
     def match?(olp)
@@ -17,6 +17,10 @@ module Spree
 
       olp[:value] = olp[:value].strip if olp[:value]
       self.slice(*COMPARISON_KEYS) == olp.slice(*COMPARISON_KEYS)
+    end
+
+    def option_value_id=(id)
+      self.value = Spree::OptionValue.find_by_id(id).name
     end
 
     private
