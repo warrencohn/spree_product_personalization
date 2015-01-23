@@ -9,7 +9,9 @@ module Spree
 
         if personalization && personalization.list?
           option_value_id = personalization_attributes[:option_value_id]
-          option_value_product_personalization = personalization.option_value_product_personalizations.find_by_option_value_id(option_value_id)
+          option_value_product_personalization = personalization.
+            option_value_product_personalizations.includes(:calculator).
+            find_by_option_value_id(option_value_id)
           calc = option_value_product_personalization.try(:calculator)
         else
           calc = personalization.try(:calculator)

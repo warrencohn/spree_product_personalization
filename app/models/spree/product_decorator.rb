@@ -20,7 +20,7 @@ module Spree
     end
 
     def personalization_with_name(name)
-      personalizations.detect { |product_personalization| product_personalization.name == name }
+      personalizations.includes(:calculator).detect { |product_personalization| product_personalization.name == name }
     end
   end
 end
