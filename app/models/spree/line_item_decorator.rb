@@ -39,7 +39,15 @@ module Spree
           if relevant_product_personalization
             line_item_personalization.line_item = self
             line_item_personalization.limit = relevant_product_personalization.limit
-            calculator = relevant_product_personalization.calculator
+
+            if relevant_product_personalization.list?
+              option_value_id = line_item_personalization.option_value_id
+              option_value_product_personalization = relevant_product_personalization.option_value_product_personalizations.find_by_option_value_id(option_value_id)
+              calculator = option_value_product_personalization.try(:calculator)
+            else
+              calculator = relevant_product_personalization.calculator
+            end
+
             line_item_personalization.price = calculator.preferred_amount
             line_item_personalization.currency = calculator.preferred_currency
           else

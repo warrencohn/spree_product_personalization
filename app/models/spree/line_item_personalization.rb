@@ -19,8 +19,13 @@ module Spree
       self.slice(*COMPARISON_KEYS) == olp.slice(*COMPARISON_KEYS)
     end
 
+    def option_value_id
+      @option_value_id
+    end
+
     def option_value_id=(id)
       self.value = Spree::OptionValue.find_by_id(id).name
+      @option_value_id = id
     end
 
     private
