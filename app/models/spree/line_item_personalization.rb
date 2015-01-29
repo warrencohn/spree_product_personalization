@@ -4,7 +4,7 @@ module Spree
 
     validate :value_length
 
-    before_validation { self.value = self.value.strip }
+    before_validation { self.value = self.value.try(:strip) }
 
     COMPARISON_KEYS = [:name, :value, :price, :currency]
 
@@ -31,11 +31,11 @@ module Spree
     private
 
     def value_length
-      if value.size < 1
+      if value.nil?
+        errors.add(:base, Spree.t('errors.personalization_option_is_required'))
+      elsif value.size < 1
         errors.add(:value, Spree.t('errors.line_item_personalization_value_greater_than_zero', size: 1))
-      end
-
-      if value.size > limit
+      elsif value.size > limit
         errors.add(:value, Spree.t('errors.line_item_personalization_value_less_than_limit', size: limit))
       end
     end

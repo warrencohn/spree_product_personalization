@@ -32,6 +32,13 @@ module Spree
     private
 
     def copy_personalizations
+      # Make sure required personalizations were created
+      self.product.personalizations.select {|p| p.required}.each do |required_personalization|
+        unless self.personalizations.detect {|p| p.name == required_personalization.name}
+          self.personalizations << Spree::LineItemPersonalization.new(line_item: self, name: required_personalization.name)
+        end
+      end
+
       if self.product.personalizations.present?
         self.personalizations.each do |line_item_personalization|
           relevant_product_personalization = product.personalization_with_name(line_item_personalization.name)
@@ -48,8 +55,9 @@ module Spree
               calculator = relevant_product_personalization.calculator
             end
 
-            line_item_personalization.price = calculator.preferred_amount
-            line_item_personalization.currency = calculator.preferred_currency
+            line_item_personalization.price = calculator.try(:preferred_amount)
+            line_item_personalization.currency = calculator.try(:preferred_currency)
+            line_item_personalization.save
           else
             line_item_personalization.destroy
           end
