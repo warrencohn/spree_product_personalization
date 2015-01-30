@@ -25,6 +25,15 @@ describe Spree::LineItem do
     ActionController::Parameters.new(options).permit(:personalizations_attributes => Spree::LineItemPersonalization.permitted_attributes)
   end
 
+  context "validation" do
+    it "is invalid when required personalization is not set" do
+      @product_personalizations[0].required = true
+      line_item = @order.contents.add(@variant, @quantity, get_params([@personalization_2, @personalization_4]))
+      expect(line_item.valid?).to be_false
+      expect(line_item.errors.messages[:'personalizations.missing'].size > 0).to be_true
+    end
+  end
+
   context "#copy_personalizations" do
     context "if the product does not have any personalization" do
       it 'does not copy any personalizations even if personalization is passed' do

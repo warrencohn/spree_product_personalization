@@ -10,7 +10,7 @@ FactoryGirl.define do
   factory :product_personalization, :class => Spree::ProductPersonalization do
     name { generate(:personalization_name) }
     description { generate(:personalization_description) }
-    required true
+    required false
     kind 'text'
     limit 200
     calculator { |p| p.association(:personalization_calculator) }
