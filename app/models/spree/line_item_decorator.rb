@@ -13,6 +13,8 @@ module Spree
 
     before_validation :copy_personalizations, :on => :create, :if => -> { self.personalizations.present? }
 
+    validate :ensure_required_personalizations
+
 
     def personalizations_match_with?(other_line_item_or_personalizations_attributes)
       if other_line_item_or_personalizations_attributes.kind_of? LineItem
@@ -31,14 +33,15 @@ module Spree
 
     private
 
-    def copy_personalizations
-      # Make sure required personalizations were created
+    def ensure_required_personalizations
       self.product.personalizations.select {|p| p.required}.each do |required_personalization|
         unless self.personalizations.detect {|p| p.name == required_personalization.name}
-          self.personalizations << Spree::LineItemPersonalization.new(line_item: self, name: required_personalization.name)
+          errors.add("personalizations.missing", {required_personalization.name => Spree.t('errors.personalization_option_is_required')})
         end
       end
+    end
 
+    def copy_personalizations
       if self.product.personalizations.present?
         self.personalizations.each do |line_item_personalization|
           relevant_product_personalization = product.personalization_with_name(line_item_personalization.name)
