@@ -36,7 +36,7 @@ module Spree
     def ensure_required_personalizations
       self.product.personalizations.select {|p| p.required}.each do |required_personalization|
         unless self.personalizations.detect {|p| p.name == required_personalization.name}
-          errors.add("personalizations.missing", {required_personalization.name => Spree.t('errors.personalization_option_is_required')})
+          errors.add("personalizations.missing", {required_personalization.name => Spree.t('errors.line_item_personalization_value_is_required', name: required_personalization.name)})
         end
       end
     end
