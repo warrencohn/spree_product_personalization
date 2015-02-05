@@ -32,9 +32,9 @@ module Spree
 
     def value_length
       if value.size < 1
-        errors.add(:base, Spree.t('errors.line_item_personalization_value_is_required', name: name))
+        errors.add(:base, {name => Spree.t('errors.line_item_personalization_value_is_required', name: name)})
       elsif value.size > limit
-        errors.add(:base, Spree.t('errors.line_item_personalization_value_is_too_long', name: name, size: limit))
+        errors.add(:base, {name => Spree.t('errors.line_item_personalization_value_is_too_long', name: name, size: limit)})
       end
     end
   end

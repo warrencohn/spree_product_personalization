@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe Spree::LineItemPersonalization do
+  let(:personalization_name) { 'Engrave' }
 
   before do
     @quantity = 2
@@ -33,8 +34,9 @@ describe Spree::LineItemPersonalization do
 
       it "should have length greater than 1" do
         @line_item_personalization.value = ""
+        @line_item_personalization.name = personalization_name
         expect(@line_item_personalization.valid?).to be_false
-        expect(@line_item_personalization.errors[:value].first).to eq "is too short (minimum is 1 characters)"
+        expect(@line_item_personalization.errors[:base].first).to eq({personalization_name => "#{personalization_name} is required"})
 
         @line_item_personalization.value = "A"
         expect(@line_item_personalization.valid?).to be_true
@@ -42,9 +44,10 @@ describe Spree::LineItemPersonalization do
 
       it "should have length less than limit" do
         @line_item_personalization.limit = 5
+        @line_item_personalization.name = personalization_name
         @line_item_personalization.value = "A long value"
         expect(@line_item_personalization.valid?).to be_false
-        expect(@line_item_personalization.errors[:value].first).to eq "is too long (maximum is 5 characters)"
+        expect(@line_item_personalization.errors[:base].first).to eq({personalization_name => "#{personalization_name} is too long (maximum is 5 characters)"})
 
         @line_item_personalization.value = "long"
         expect(@line_item_personalization.valid?).to be_true
