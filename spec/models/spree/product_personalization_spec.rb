@@ -175,4 +175,14 @@ describe Spree::ProductPersonalization do
     expect(Spree::Calculator::FlatRate.find_by(id: calc_id)).to be_nil
   end
 
+  it "return increase price" do
+    personalization = FactoryGirl.create(:product_personalization)
+    expect(personalization.increase_price).to eq(personalization.calculator.preferred_amount)
+
+    personalization = FactoryGirl.create(:product_personalization_with_option_value)
+    personalization.option_value_product_personalizations.each_with_index do |o, i|
+      expect(personalization.increase_price(i)).to eq(o.calculator.preferred_amount)
+    end
+  end
+
 end
