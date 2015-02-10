@@ -13,7 +13,7 @@ module Spree
 
     before_validation :copy_personalizations, :on => :create, :if => -> { self.personalizations.present? }
 
-    validate :ensure_required_personalizations
+    validate :ensure_required_personalizations, :on => :create
 
 
     def personalizations_match_with?(other_line_item_or_personalizations_attributes)
