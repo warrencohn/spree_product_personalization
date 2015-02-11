@@ -22,13 +22,11 @@ module Spree
       elsif other_line_item_or_personalizations_attributes.kind_of? Hash
         personalizations_attributes = other_line_item_or_personalizations_attributes[:personalizations_attributes] || []
         personalizations_attributes = fill_personalizations_attributes(personalizations_attributes)
-      end
-
-      if personalizations_attributes.present?
-        matching_personalizations_attributes?(personalizations_attributes)
       else
-        false
+        # wrong data passed in. force to not match (better create separate line_items than merge two different ones)
+        return false
       end
+      matching_personalizations_attributes?(personalizations_attributes)
     end
 
     private

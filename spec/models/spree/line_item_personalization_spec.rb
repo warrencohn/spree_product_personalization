@@ -79,6 +79,14 @@ describe Spree::LineItemPersonalization do
     expect(line_item.personalizations).to eq([])
   end
 
+  it "match line_item when no personalization is set" do
+    old_item = @order.contents.add(@variant, @quantity)
+    new_item = @order.contents.add(@variant, @quantity)
+
+    expect(new_item.id).to eq(old_item.id)
+    expect(new_item.quantity).to eq(@quantity * 2)
+  end
+
   it "match line_item when personalization is same" do
     old_item = @order.contents.add(@variant, @quantity, get_params([@personalization_1, @personalization_4]))
     new_item = @order.contents.add(@variant, @quantity, get_params([@personalization_1, @personalization_4]))
