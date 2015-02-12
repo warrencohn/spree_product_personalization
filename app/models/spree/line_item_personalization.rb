@@ -2,14 +2,14 @@ module Spree
   class LineItemPersonalization < ActiveRecord::Base
     belongs_to :line_item
 
-    validates_length_of :value, in: Range.new(1, Spree::Personalization::Config[:text_limit])
+    validate :value_length
 
-    before_validation { self.value = self.value.strip }
+    before_validation { self.value = self.value.try(:strip) }
 
     COMPARISON_KEYS = [:name, :value, :price, :currency]
 
-    def self.permitted_attributes 
-      [:value]
+    def self.permitted_attributes
+      [:name, :value, :option_value_id]
     end
 
     def match?(olp)
@@ -19,5 +19,23 @@ module Spree
       self.slice(*COMPARISON_KEYS) == olp.slice(*COMPARISON_KEYS)
     end
 
+    def option_value_id
+      @option_value_id
+    end
+
+    def option_value_id=(id)
+      self.value = Spree::OptionValue.find_by_id(id).name
+      @option_value_id = id
+    end
+
+    private
+
+    def value_length
+      if value.size < 1
+        errors.add(:base, {name => Spree.t('errors.line_item_personalization_value_is_required', name: name)})
+      elsif value.size > limit
+        errors.add(:base, {name => Spree.t('errors.line_item_personalization_value_is_too_long', name: name, size: limit)})
+      end
+    end
   end
 end
