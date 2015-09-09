@@ -14,5 +14,6 @@ group :development, :test do
   gem 'simplecov-rcov'
   gem 'yarjuf'
   gem 'require_all'
+  gem 'test-unit'
   gem 'byebug'
 end
