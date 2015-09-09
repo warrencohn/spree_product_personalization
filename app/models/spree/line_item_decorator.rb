@@ -58,9 +58,8 @@ module Spree
 
             line_item_personalization.price = calculator.try(:preferred_amount)
             line_item_personalization.currency = calculator.try(:preferred_currency)
-            line_item_personalization.save
           else
-            line_item_personalization.destroy
+            self.personalizations.destroy(line_item_personalization)
           end
         end
       else
