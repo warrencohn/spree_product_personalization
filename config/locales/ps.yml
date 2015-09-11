@@ -1,0 +1,11 @@
+# Sample localization file for English. Add more files in this directory for other locales.
+# See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
+
+ps:
+  spree:
+    errors:
+      increasing_price_can_not_be_negative: "[Încréåsîng prîcé cån nòt bé négåtîvé !!! !!! !!!]"
+      personalization_text_cannot_have_options: "[Téxt pérsònålîzåtîòn cånnòt håvé òptîòns !!! !!! !!! !!!]"
+      personalization_options_should_have_options: "[Òptîòns pérsònålîzåtîòn shòüld håvé òptîòns !!! !!! !!! !!!]"
+      line_item_personalization_value_is_required: "%{name}[ îs réqüîréd !!!]"
+      line_item_personalization_value_is_too_long: "%{name}[ îs tòò lòng (måxîmüm îs  !!! !!!]%{size}[ chåråctérs) !!!]"
