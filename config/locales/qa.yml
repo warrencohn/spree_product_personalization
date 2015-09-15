@@ -1,0 +1,9 @@
+---
+qa:
+  spree:
+    errors:
+      increasing_price_can_not_be_negative: "[spree_product_personalization/2-2-nemo-stable/config/locales/en.yml:qa:spree:errors:increasing_price_can_not_be_negative]"
+      personalization_text_cannot_have_options: "[spree_product_personalization/2-2-nemo-stable/config/locales/en.yml:qa:spree:errors:personalization_text_cannot_have_options]"
+      personalization_options_should_have_options: "[spree_product_personalization/2-2-nemo-stable/config/locales/en.yml:qa:spree:errors:personalization_options_should_have_options]"
+      line_item_personalization_value_is_required: "[spree_product_personalization/2-2-nemo-stable/config/locales/en.yml:qa:spree:errors:line_item_personalization_value_is_required]"
+      line_item_personalization_value_is_too_long: "[spree_product_personalization/2-2-nemo-stable/config/locales/en.yml:qa:spree:errors:line_item_personalization_value_is_too_long]"
