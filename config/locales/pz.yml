@@ -4,8 +4,8 @@
 pz:
   spree:
     errors:
-      increasing_price_can_not_be_negative: "Zzzzzzzzzz zzzzz zzz zzz zz zzzzzzzz"
-      personalization_text_cannot_have_options: "Zzzz zzzzzzzzzzzzzzz zzzzzz zzzz zzzzzzz"
-      personalization_options_should_have_options: "Zzzzzzz zzzzzzzzzzzzzzz zzzzzz zzzz zzzzzzz"
-      line_item_personalization_value_is_required: "%{name} zz zzzzzzzz"
-      line_item_personalization_value_is_too_long: "%{name} zz zzz zzzz (zzzzzzz zz %{size} zzzzzzzzzz)"
+      increasing_price_can_not_be_negative: "⌠515249⌡Zzzzzzzzzz zzzzz zzz zzz zz zzzzzzzz⌠515249⌡"
+      personalization_text_cannot_have_options: "⌠515250⌡Zzzz zzzzzzzzzzzzzzz zzzzzz zzzz zzzzzzz⌠515250⌡"
+      personalization_options_should_have_options: "⌠515251⌡Zzzzzzz zzzzzzzzzzzzzzz zzzzzz zzzz zzzzzzz⌠515251⌡"
+      line_item_personalization_value_is_required: "⌠515252⌡%{name} zz zzzzzzzz⌠515252⌡"
+      line_item_personalization_value_is_too_long: "⌠515253⌡%{name} zz zzz zzzz (zzzzzzz zz %{size} zzzzzzzzzz)⌠515253⌡"
